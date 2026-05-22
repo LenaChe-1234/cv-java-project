@@ -1,7 +1,8 @@
 package com.lena.automation.browser.local;
 
 import com.google.common.collect.ImmutableMap;
-import com.lena.automation.browser.IBrowserConfig;
+import config.Config;
+import drivers.IBrowserConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -13,10 +14,13 @@ public class LocalFirefoxBrowser implements IBrowserConfig {
 
     @Override
     public WebDriver setupDriver() {
-
         WebDriverManager.firefoxdriver().setup();
 
         FirefoxOptions options = new FirefoxOptions();
+
+        if (Config.headless()) {
+            options.addArguments("-headless");
+        }
 
         return new FirefoxDriver(options);
     }

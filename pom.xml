@@ -1,96 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+<modelVersion>4.0.0</modelVersion>
 
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>org.example</groupId>
+  <groupId>com.example</groupId>
   <artifactId>cv-java-project</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>cv-java-project</name>
+  <description>UI + API tests for OWASP Juice Shop</description>
 
   <properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <junit.jupiter.version>5.10.2</junit.jupiter.version>
+    <selenide.version>7.5.1</selenide.version>
+    <restassured.version>5.5.0</restassured.version>
+    <allure.version>2.27.0</allure.version>
+    <surefire.version>3.2.5</surefire.version>
+    <spotless.version>2.43.0</spotless.version>
+    <dependency.check.version>10.0.3</dependency.check.version>
+    <selenium.version>4.20.0</selenium.version>
+    <webdrivermanager.version>5.9.2</webdrivermanager.version>
+
   </properties>
 
   <dependencies>
 
-    <!-- Selenium -->
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
-      <version>4.33.0</version>
-    </dependency>
-
-    <!-- WebDriverManager -->
     <dependency>
       <groupId>io.github.bonigarcia</groupId>
       <artifactId>webdrivermanager</artifactId>
-      <version>6.1.0</version>
-    </dependency>
-
-    <!-- RestAssured -->
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <version>5.5.1</version>
-      <scope>test</scope>
+      <version>${webdrivermanager.version}</version>
     </dependency>
 
     <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.10.2</version>
-      <scope>test</scope>
+      <version>${junit.jupiter.version}</version>
     </dependency>
 
-    <!-- Allure -->
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>${selenium.version}</version>
+    </dependency>
+
+
+    <!-- Selenide (com.codeborne) -->
+    <dependency>
+      <groupId>com.codeborne</groupId>
+      <artifactId>selenide</artifactId>
+      <version>${selenide.version}</version>
+    </dependency>
+
+    <!-- Rest Assured (io.rest-assured) -->
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>${restassured.version}</version>
+    </dependency>
+
+    <!-- Jackson for JSON (optional but handy) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.1</version>
+    </dependency>
+
+    <!-- Allure JUnit5 adapter -->
     <dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-junit5</artifactId>
-      <version>2.29.1</version>
-      <scope>test</scope>
+      <version>${allure.version}</version>
     </dependency>
 
-    <!-- slf4j-simple -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>2.0.16</version>
-      <scope>test</scope>
     </dependency>
 
-    <!-- Guava -->
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>33.3.1-jre</version>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-selenide</artifactId>
+      <version>2.34.0</version>
     </dependency>
-
   </dependencies>
 
   <build>
     <plugins>
-
-      <!-- Maven Compiler -->
+      <!-- Compiler -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.0</version>
+        <version>3.13.0</version>
         <configuration>
-          <source>17</source>
-          <target>17</target>
+          <release>21</release>
         </configuration>
       </plugin>
 
-      <!-- Surefire -->
+      <!-- Surefire: run unit-style tests (*Tests.java) -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.3</version>
+        <version>${surefire.version}</version>
+        <configuration>
+          <useSystemClassLoader>false</useSystemClassLoader>
+          <includes>
+            <include>**/*Tests.java</include>
+            <include>**/*Test.java</include>
+          </includes>
+          <systemPropertyVariables>
+            <junit.jupiter.execution.parallel.enabled>true</junit.jupiter.execution.parallel.enabled>
+            <junit.jupiter.execution.parallel.mode.default>concurrent</junit.jupiter.execution.parallel.mode.default>
+            <junit.jupiter.execution.parallel.mode.classes.default>concurrent</junit.jupiter.execution.parallel.mode.classes.default>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
 
+      <!-- Allure report -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.12.0</version>
+      </plugin>
+
+      <!-- OWASP Dependency-Check -->
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>${dependency.check.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Spotless (com.diffplug) -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat/>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>apply</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

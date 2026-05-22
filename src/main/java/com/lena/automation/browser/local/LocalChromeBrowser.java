@@ -1,7 +1,8 @@
 package com.lena.automation.browser.local;
 
 import com.google.common.collect.ImmutableMap;
-import com.lena.automation.browser.IBrowserConfig;
+import config.Config;
+import drivers.IBrowserConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,12 +14,14 @@ public class LocalChromeBrowser implements IBrowserConfig {
 
     @Override
     public WebDriver setupDriver() {
-
         WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
-
         options.addArguments("--start-maximized");
+
+        if (Config.headless()) {
+            options.addArguments("--headless=new");
+        }
 
         return new ChromeDriver(options);
     }
