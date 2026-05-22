@@ -1,7 +1,7 @@
 package com.lena.automation.browser.browserstack;
 
 import com.google.common.collect.ImmutableMap;
-import com.lena.automation.browser.IBrowserConfig;
+import drivers.IBrowserConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;

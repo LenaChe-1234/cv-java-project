@@ -1,7 +1,7 @@
-package ui.tests;
+package ui;
 
-import com.lena.automation.browser.BrowserFactory;
-import com.lena.automation.browser.IBrowserConfig;
+import drivers.BrowserFactory;
+import drivers.IBrowserConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
