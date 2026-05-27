@@ -1,6 +1,5 @@
 package pages;
 
-<<<<<<< HEAD
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import pages.components.AccountMenu;
@@ -26,19 +25,3 @@ public class TopBar {
         return new BasketPage();
     }
 }
-=======
-import static com.codeborne.selenide.Selenide.*;
-
-public class TopBar {
-    public LoginPage openLogin() {
-        $("button[aria-label='Show/hide account menu'], #navbarAccount").click();
-        $("button[aria-label='Go to login page'], #navbarLoginButton").click();
-        return new LoginPage();
-    }
-
-    public BasketPage openBasket() {
-        $("button[aria-label='Show the shopping cart'], #navbarBasket, a[routerlink='/basket']").click();
-        return new BasketPage();
-    }
-}
->>>>>>> origin/main

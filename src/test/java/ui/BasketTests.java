@@ -1,55 +1,23 @@
-<<<<<<< HEAD
-//package ui;
-//
-//import base.BaseUiTest;
-//import org.junit.jupiter.api.Test;
-//import pages.HomePage;
-//import pages.LoginPage;
-//
-//class BasketTests extends BaseUiTest {
-//
-//    @Test
-//    void addProductToBasket_flow() {
-//        new HomePage().open().assertLoaded()
-//                .goToLogin();
-//
-//        new LoginPage()
-//                .loginAs("demo@juice-sh.op", "demo");
-//
-//        new HomePage()
-//                .openFirstProduct()
-//                .assertLoaded()
-//                .addItemToBasket()
-//                .openBasket()
-//                .assertLoaded()
-//                .assertHasItems();
-//    }
-//}
-=======
 package ui;
 
 import base.BaseUiTest;
 import org.junit.jupiter.api.Test;
-import pages.HomePage;
-import pages.LoginPage;
 
 class BasketTests extends BaseUiTest {
 
     @Test
     void addProductToBasket_flow() {
-        new HomePage().open().assertLoaded()
-                .goToLogin();
+        pages.home.open();
 
-        new LoginPage()
-                .loginAs("demo@juice-sh.op", "demo");
+        pages.topBar.openLogin();
+        pages.login.loginAs("demo@juice-sh.op", "Dem≠o123!");
 
-        new HomePage()
-                .openFirstProduct()
-                .assertLoaded()
-                .addItemToBasket()
-                .openBasket()
-                .assertLoaded()
-                .assertHasItems();
+        pages.home.openFirstProduct();
+        pages.product.assertIsOpened();
+        pages.product.addToBasket();
+
+        pages.topBar.openBasket();
+        pages.basket.assertIsOpened();
+        pages.basket.assertHasItems();
     }
 }
->>>>>>> origin/main

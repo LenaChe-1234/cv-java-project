@@ -1,6 +1,5 @@
 package drivers;
 
-<<<<<<< HEAD
 import com.codeborne.selenide.WebDriverProvider;
 import config.Config;
 import org.openqa.selenium.Capabilities;
@@ -13,7 +12,3 @@ public class WebDriverFactory implements WebDriverProvider {
         return BrowserFactory.getBrowser(Config.browser()).setupDriver();
     }
 }
-=======
-public class WebDriverFactory {
-}
->>>>>>> origin/main
