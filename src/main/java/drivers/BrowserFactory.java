@@ -1,4 +1,4 @@
-package com.lena.automation.browser;
+package drivers;
 
 import com.lena.automation.browser.browserstack.BrowserstackBrowserChrome;
 import com.lena.automation.browser.browserstack.BrowserstackBrowserEdge;
