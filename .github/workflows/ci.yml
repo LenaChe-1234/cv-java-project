@@ -1,20 +1,60 @@
 name: CI
 
+<<<<<<< HEAD
 on: [push, pull_request]
+=======
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      test_subset:
+        description: 'Which tests to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - api
+          - ui
+      browser:
+        description: 'Browser for UI tests'
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+      base_url:
+        description: 'Application base URL'
+        required: true
+        default: 'https://juice-shop.herokuapp.com'
+        type: string
+>>>>>>> origin/main
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+<<<<<<< HEAD
+=======
+      fail-fast: false
+>>>>>>> origin/main
       matrix:
         subset: [api, ui]
     steps:
       - uses: actions/checkout@v4
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
+<<<<<<< HEAD
       - name: Run API tests
         if: matrix.subset == 'api'
         run: mvn -B -Dtest=*ApiTests test
@@ -24,11 +64,32 @@ jobs:
         env:
           HEADLESS: true
         run: xvfb-run -a mvn -B -Dtest=*UiTest,*UiTests test
+=======
+
+      - name: Run API tests
+        if: >-
+          matrix.subset == 'api' &&
+          (github.event_name != 'workflow_dispatch' || github.event.inputs.test_subset == 'all' || github.event.inputs.test_subset == 'api')
+        run: |
+          mvn -B -Dtest=*ApiTests test \
+            -Durl=${{ github.event.inputs.base_url || 'https://juice-shop.herokuapp.com' }}
+
+      - name: Run UI tests headless
+        if: >-
+          matrix.subset == 'ui' &&
+          (github.event_name != 'workflow_dispatch' || github.event.inputs.test_subset == 'all' || github.event.inputs.test_subset == 'ui')
+        run: |
+          xvfb-run -a mvn -B -Dtest=*UiTest,*UiTests test \
+            -Durl=${{ github.event.inputs.base_url || 'https://juice-shop.herokuapp.com' }} \
+            -Dbrowser=${{ github.event.inputs.browser || 'chrome' }} \
+            -Dheadless=true
+>>>>>>> origin/main
 
       - name: Generate Allure report
         if: always()
         run: mvn -B allure:report
 
+<<<<<<< HEAD
       - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v4
@@ -43,5 +104,34 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: '[juice-shop.herokuapp.com](https://juice-shop.herokuapp.com)'
+=======
+      - name: Upload Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ matrix.subset }}
+          path: target/site/allure-maven-plugin
+          if-no-files-found: ignore
+
+      - name: Upload Selenide reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenide-reports-${{ matrix.subset }}
+          path: target/selenide-reports
+          if-no-files-found: ignore
+
+  zap-baseline:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ github.event.inputs.base_url || 'https://juice-shop.herokuapp.com' }}
+>>>>>>> origin/main
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
